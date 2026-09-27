@@ -102,6 +102,9 @@ belongs to.
 
 ## 3. Installation
 
+Run these commands from the repository root, the folder containing `run.py`,
+`app/`, and `requirements.txt`.
+
 ```bash
 python -m venv venv
 
@@ -130,7 +133,8 @@ Run the app:
 python run.py
 ```
 
-Then open **http://localhost:8000**
+Then open **http://localhost:8000**. If the server is already running, do not
+start a second copy; reuse that URL or stop the existing process first.
 
 On first run the app automatically:
 1. Creates `data/novatech.db` (SQLite) and all tables
@@ -157,8 +161,10 @@ Important deployment limits:
   generated alert files can be lost after redeploys or restarts. Use a paid
   persistent disk mounted at `/opt/render/project/src/data` for a small demo,
   or move the database to PostgreSQL for a real deployment.
-- CPU inference may be slow on free Render instances. A paid instance or a
-  separate GPU-capable host is recommended for multiple live cameras.
+- The included Render configuration sets `VISION_ENABLED=false` because the
+  free plan has limited memory. The dashboard still runs its simulated camera
+  feeds. Set it to `true` only on a larger instance with enough memory for
+  YOLO inference.
 - Set the `ADMIN_PASSWORD` secret in Render before exposing the app publicly.
   The local-only fallback credentials are `admin` / `novatech123`.
 
@@ -355,5 +361,6 @@ WS   /ws/dashboard                      realtime worker/alert/camera broadcasts
    `/api/zones` POST endpoint).
 5. Multi-user auth with per-role permissions instead of one shared admin
    account.
-#   M A N U F A T U R I N G _ A I _ M O N I T O R  
+#   M A N U F A T U R I N G _ A I _ M O N I T O R 
+ 
  

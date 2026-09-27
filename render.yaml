@@ -1,4 +1,4 @@
-hservices:
+services:
   - type: web
     name: novatech-manufacturing-monitor
     runtime: python
