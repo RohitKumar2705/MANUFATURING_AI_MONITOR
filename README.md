@@ -1,4 +1,7 @@
-# NovaTech AI Manufacturing Worker Monitoring & Process Compliance System
+# NovaTech AI Manufacturing Monitor
+
+> AI-assisted worker monitoring and process-compliance dashboard for
+> manufacturing operations.
 
 A local, self-contained prototype for AI-assisted manufacturing-floor monitoring:
 worker detection & tracking, zone/workstation awareness, explainable activity
@@ -12,7 +15,7 @@ process-compliance tracking - built for **NovaTech Manufacturing Pvt. Ltd.**,
 
 ---
 
-## 1. What is real AI vs. rule-based vs. simulated (read this first)
+## 1. AI, Rules, and Simulation
 
 This project is explicit and transparent about what is genuinely AI-driven,
 what is a deterministic rule, and what is simulated for demo purposes. Every
@@ -20,7 +23,7 @@ alert, activity label, and process update in the UI carries a `basis` field
 (or an on-screen tag) that tells you which of these three categories it
 belongs to.
 
-### ✅ Real AI (actual model inference, on-device, CPU or GPU)
+### Real AI
 - **Person / object detection** — Ultralytics YOLOv8n (`models/yolov8n.pt`),
   a genuine pretrained COCO detector. Verified during development to
   correctly detect and box real people in real photos/video.
@@ -34,7 +37,7 @@ belongs to.
   the UI honestly reports **`MODEL_NOT_CONFIGURED`** rather than fabricating
   a result.
 
-### ⚙️ Rule-based / heuristic (deterministic logic, not a trained model)
+### Rule-Based Logic
 - **Tracking** — a lightweight custom IOU tracker (`app/vision/tracking.py`),
   one instance per camera, assigns stable "Worker 001/002/…" IDs across
   frames. (Not Ultralytics' built-in ByteTrack/BoT-SORT `persist=True` mode —
@@ -60,7 +63,7 @@ belongs to.
   This is clearly labeled `"basis": "heuristic_demo_progression"` everywhere
   it appears and is never presented as genuine per-step vision detection.
 
-### 🧪 Simulated (for demo purposes only, always labeled)
+### Simulated Demo Features
 - **Synthetic camera fallback** — if a configured camera source (webcam,
   RTSP, mobile URL, file) cannot be opened, the system generates a
   procedurally-drawn video feed (moving rectangle "worker") so the dashboard
@@ -76,7 +79,7 @@ belongs to.
   alert without a real camera. Every alert raised this way has
   `"simulated": true` and is prefixed `[SIMULATED EVENT]`.
 
-### ❌ Not implemented (would require a custom-trained model)
+### Not Implemented
 - A manufacturing-specific object detector (screws, tools, boxes,
   finished-product classes) — the base COCO model doesn't have these classes.
   The `DetectionModel` interface (`app/vision/interfaces.py`) is ready to
@@ -88,7 +91,7 @@ belongs to.
 
 ---
 
-## 2. Technology stack
+## 2. Technology Stack
 
 - **Backend:** FastAPI, Python 3.11+, SQLAlchemy + SQLite, WebSockets
 - **Computer vision:** Ultralytics YOLOv8n (detection) + YOLOv8n-Pose, OpenCV,
@@ -100,7 +103,7 @@ belongs to.
 
 ---
 
-## 3. Installation
+## 3. Installation and Usage
 
 Run these commands from the repository root, the folder containing `run.py`,
 `app/`, and `requirements.txt`.
@@ -143,7 +146,7 @@ On first run the app automatically:
 3. Starts all 5 camera worker threads (falling back to SIMULATED CAMERA for
    any source it can't open)
 
-### Deploying on Render
+### Deploying to Render
 
 This repository includes `render.yaml` for a Render Web Service.
 
@@ -170,15 +173,15 @@ Important deployment limits:
 
 ---
 
-## 4. Camera setup
+## 4. Camera Setup
 
 | Camera | Default source | Notes |
-|---|---|---|
-| CAM-001 Assembly Line A | laptop webcam (`0`) | falls back to SIMULATED CAMERA if no webcam is present |
-| CAM-002 Assembly Line B | `demo/videos/cam2_assembly_b.mp4` | |
-| CAM-003 Quality Inspection | `demo/videos/cam3_quality.mp4` | |
-| CAM-004 Packaging | `demo/videos/cam4_packaging.mp4` | |
-| CAM-005 Warehouse | `demo/videos/cam5_warehouse.mp4` | |
+| --- | --- | --- |
+| CAM-001 Assembly Line A | Laptop webcam (`0`) | Falls back to simulation if unavailable |
+| CAM-002 Assembly Line B | `demo/videos/cam2_assembly_b.mp4` | Demo video |
+| CAM-003 Quality Inspection | `demo/videos/cam3_quality.mp4` | Demo video |
+| CAM-004 Packaging | `demo/videos/cam4_packaging.mp4` | Demo video |
+| CAM-005 Warehouse | `demo/videos/cam5_warehouse.mp4` | Demo video |
 
 **To use your laptop webcam for real detections:** just run the app - CAM-001
 defaults to source `0`.
@@ -200,7 +203,7 @@ credentials: `admin` / `novatech123`).
 
 ---
 
-## 5. Seeing real AI detections (important!)
+## 5. Seeing Real AI Detections
 
 The demo video clips and the synthetic-camera fallback are procedurally
 drawn shapes, **not real people** — so YOLO correctly reports zero "person"
@@ -213,7 +216,7 @@ see a bounding box, a `Worker NNN` label, and a live activity state
 
 ---
 
-## 6. Design decisions worth knowing about
+## 6. Design Decisions
 
 - **Per-camera tracking, not a shared tracker.** Ultralytics' built-in
   `model.track(..., persist=True)` keeps its tracker state on the shared
@@ -241,7 +244,7 @@ would be replaced by badge/RFID/manual check-in correlation.
 
 ---
 
-## 8. Project structure
+## 8. Project Structure
 
 ```
 manufacturing-ai-monitor/
@@ -254,14 +257,14 @@ manufacturing-ai-monitor/
 │   │                             activity, camera_stream, camera_manager
 │   ├── intelligence/             # process_monitor, rule_engine, alert_manager
 │   ├── services/                 # worker_service, event_service, ws_manager
-│   ├── templates/                 # Jinja2 pages (dark industrial theme)
-│   └── static/                   # css/js
-├── models/                       # yolov8n.pt, yolov8n-pose.pt (downloaded)
+│   ├── templates/                # Jinja2 pages
+│   └── static/                   # CSS and JavaScript
+├── models/                       # YOLO model files
 ├── demo/
 │   ├── videos/                   # generated demo clips
 │   └── generate_demo.py
 ├── tests/
-├── data/                          # SQLite DB + alert snapshots (created at runtime)
+├── data/                         # SQLite DB + alert snapshots
 ├── logs/app.log
 ├── config.yaml                    # every tunable threshold lives here
 ├── requirements.txt
@@ -271,7 +274,7 @@ manufacturing-ai-monitor/
 
 ---
 
-## 9. API endpoints (selected)
+## 9. Selected API Endpoints
 
 ```
 GET  /api/cameras                       list cameras + live status
@@ -308,7 +311,7 @@ WS   /ws/dashboard                      realtime worker/alert/camera broadcasts
 
 ---
 
-## 10. Manual testing checklist
+## 10. Manual Testing Checklist
 
 - [ ] `python run.py` starts with no unhandled exceptions
 - [ ] `http://localhost:8000` loads the dashboard with 5 camera tiles
@@ -329,7 +332,7 @@ WS   /ws/dashboard                      realtime worker/alert/camera broadcasts
 
 ---
 
-## 11. Known limitations
+## 11. Known Limitations
 
 - No real PPE model ships with the project (see §1).
 - Process-step progression is a time-based heuristic, not real per-step
@@ -345,7 +348,7 @@ WS   /ws/dashboard                      realtime worker/alert/camera broadcasts
   automatically if `torch.cuda.is_available()` and `inference.device: cuda`
   is set in `config.yaml`, but this hasn't been exercised end-to-end here.
 
-## 12. Next recommended improvements
+## 12. Recommended Improvements
 
 1. Train or source a real PPE-detection model and drop it in at
    `models.ppe` in `config.yaml` — everything downstream (RuleEngine,
@@ -361,6 +364,3 @@ WS   /ws/dashboard                      realtime worker/alert/camera broadcasts
    `/api/zones` POST endpoint).
 5. Multi-user auth with per-role permissions instead of one shared admin
    account.
-#   M A N U F A T U R I N G _ A I _ M O N I T O R 
- 
- 
