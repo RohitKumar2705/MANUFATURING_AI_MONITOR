@@ -355,3 +355,5 @@ WS   /ws/dashboard                      realtime worker/alert/camera broadcasts
    `/api/zones` POST endpoint).
 5. Multi-user auth with per-role permissions instead of one shared admin
    account.
+#   M A N U F A T U R I N G _ A I _ M O N I T O R  
+ 
