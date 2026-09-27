@@ -1,0 +1,41 @@
+# --- Web framework -----------------------------------------------------
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+jinja2==3.1.6
+python-multipart==0.0.32
+itsdangerous==2.2.0
+
+# --- Database -----------------------------------------------------------
+sqlalchemy==2.1.1
+
+# --- Validation / config --------------------------------------------------
+pydantic==2.13.5
+pydantic-settings==2.15.0
+PyYAML==6.0.3
+
+# --- Realtime / system ----------------------------------------------------
+websockets==17.1
+psutil==7.2.2
+aiofiles==25.1.0
+
+# --- Security -------------------------------------------------------------
+bcrypt==5.0.0
+
+# --- Computer vision --------------------------------------------------
+opencv-python-headless==4.13.0.92
+numpy==2.4.4
+ultralytics==8.4.163
+torch==2.14.0
+lap==0.5.13
+
+# --- Testing (optional, dev only) -----------------------------------------
+pytest==9.1.1
+httpx==0.28.1
+
+# NOTE ON GPU/CPU TORCH:
+# `pip install -r requirements.txt` installs whatever torch build PyPI
+# resolves for your platform (CPU-only on most systems without extra flags).
+# For an NVIDIA GPU build instead, install torch first from
+# https://pytorch.org/get-started/locally/ using the command for your CUDA
+# version, THEN run `pip install -r requirements.txt` (pip will see torch is
+# already satisfied and skip it).

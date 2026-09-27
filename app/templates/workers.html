@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Workers - NovaTech{% endblock %}
+{% block content %}
+<div class="section-title" style="margin-top:0;">Worker Database</div>
+<table class="data-table">
+  <thead><tr>
+    <th>Worker ID</th><th>Name</th><th>Department</th><th>Shift</th>
+    <th>Assigned Workstation</th><th>Status</th><th>Current Camera</th><th>Last Seen</th>
+  </tr></thead>
+  <tbody id="rows"><tr><td colspan="8" style="color:var(--text-dim)">Loading…</td></tr></tbody>
+</table>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const r = await fetch('/api/workers');
+  const rows = await r.json();
+  document.getElementById('rows').innerHTML = rows.map(w => `
+    <tr>
+      <td><a href="/worker/${w.worker_id}" style="color:var(--accent)">${w.worker_id}</a></td>
+      <td>${w.name}</td><td>${w.department}</td><td>${w.shift}</td>
+      <td>${w.assigned_workstation}</td>
+      <td><span class="badge-activity ${w.status}">${w.status}</span></td>
+      <td>${w.current_camera || '-'}</td>
+      <td>${w.last_seen ? new Date(w.last_seen).toLocaleTimeString() : 'never'}</td>
+    </tr>`).join('');
+}
+load();
+setInterval(load, 4000);
+</script>
+{% endblock %}

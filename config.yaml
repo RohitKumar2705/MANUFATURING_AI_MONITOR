@@ -1,0 +1,56 @@
+##############################################################################
+# NovaTech Manufacturing AI Monitor - Configuration
+##############################################################################
+
+app:
+  name: "NovaTech Precision Components Plant - Unit 01"
+  company: "NovaTech Manufacturing Pvt. Ltd."
+  demo_mode: true
+  host: "0.0.0.0"
+  port: 8000
+
+models:
+  detection: "models/yolov8n.pt"        # general-purpose COCO detector (person, backpack, bottle, chair, ...)
+  pose: "models/yolov8n-pose.pt"        # lightweight pose estimation, used for activity inference
+  ppe: "models/ppe_model.pt"            # NOT INCLUDED by default -> PPE detection reports "MODEL NOT CONFIGURED"
+
+inference:
+  confidence: 0.45
+  iou: 0.5
+  inference_fps: 8          # run the detector at most this many times per second per camera
+  device: "cpu"             # "cpu" or "cuda" (auto-falls-back to cpu if cuda unavailable)
+
+tracking:
+  tracker: "bytetrack.yaml"
+  track_timeout_seconds: 5   # how long a lost track ID is kept "alive" before being dropped
+
+activity:
+  idle_threshold_seconds: 30
+  critical_idle_threshold_seconds: 120
+  walking_pixel_speed_threshold: 18     # bbox-center px/sec (at 640-wide frame) to count as "walking"
+  working_motion_threshold: 4           # bbox-center px/sec minimum "activity" to not be idle
+  min_history_seconds: 2                # need this much track history before leaving UNKNOWN
+
+zones:
+  restricted_alert_cooldown_seconds: 60
+
+alerts:
+  default_cooldown_seconds: 45
+  idle_warning_cooldown_seconds: 60
+  idle_critical_cooldown_seconds: 90
+
+process:
+  step_stall_seconds: 90     # if no step progress for this long -> DEVIATION/UNKNOWN flag
+
+camera:
+  reconnect_interval_seconds: 10
+  frame_read_timeout_seconds: 5
+
+security:
+  admin_username: "admin"
+  # default password is "novatech123" (bcrypt hash) - change in production
+  session_secret: "CHANGE_ME_DEV_ONLY_SECRET_KEY"
+
+logging:
+  level: "INFO"
+  file: "logs/app.log"

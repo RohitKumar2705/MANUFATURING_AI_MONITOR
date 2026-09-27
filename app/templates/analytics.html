@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Analytics - NovaTech{% endblock %}
+{% block content %}
+<div class="grid-2">
+  <div class="chart-box"><h4>Workers per Camera</h4><canvas id="chartWorkersPerCamera" height="180"></canvas></div>
+  <div class="chart-box"><h4>Working vs Potential Idle</h4><canvas id="chartWorkingIdle" height="180"></canvas></div>
+  <div class="chart-box"><h4>Alerts by Type</h4><canvas id="chartAlertsByType" height="180"></canvas></div>
+  <div class="chart-box"><h4>Alerts by Camera</h4><canvas id="chartAlertsByCamera" height="180"></canvas></div>
+  <div class="chart-box"><h4>Camera Uptime (online/simulated/offline)</h4><canvas id="chartUptime" height="180"></canvas></div>
+  <div class="chart-box"><h4>Activity Distribution</h4><canvas id="chartActivityDist" height="180"></canvas></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+Chart.defaults.color = '#8b93a3';
+Chart.defaults.borderColor = '#262b36';
+const palette = ['#00c2ff','#22c55e','#f59e0b','#ef4444','#a78bfa','#f97316'];
+
+async function build() {
+  const summary = await (await fetch('/api/dashboard/summary')).json();
+  const alerts = await (await fetch('/api/alerts?limit=500')).json();
+
+  // Workers per camera
+  new Chart(document.getElementById('chartWorkersPerCamera'), {
+    type: 'bar',
+    data: { labels: summary.cameras.map(c => c.camera_id),
+      datasets: [{ label: 'Workers Detected', data: summary.cameras.map(c => c.workers_detected), backgroundColor: palette[0] }] },
+    options: { plugins: { legend: { display: false } } }
+  });
+
+  // Working vs Idle
+  new Chart(document.getElementById('chartWorkingIdle'), {
+    type: 'doughnut',
+    data: { labels: ['Working', 'Potential Idle', 'Other'],
+      datasets: [{ data: [summary.working, summary.potential_idle,
+        Math.max(0, summary.active_workers - summary.working - summary.potential_idle)],
+        backgroundColor: [palette[1], palette[2], '#33384a'] }] }
+  });
+
+  // Alerts by type
+  const byType = {};
+  alerts.forEach(a => byType[a.type] = (byType[a.type]||0)+1);
+  new Chart(document.getElementById('chartAlertsByType'), {
+    type: 'bar',
+    data: { labels: Object.keys(byType), datasets: [{ label: 'Alerts', data: Object.values(byType), backgroundColor: palette[3] }] },
+    options: { plugins: { legend: { display: false } }, indexAxis: 'y' }
+  });
+
+  // Alerts by camera
+  const byCamera = {};
+  alerts.forEach(a => { const k = a.camera_id || 'n/a'; byCamera[k] = (byCamera[k]||0)+1; });
+  new Chart(document.getElementById('chartAlertsByCamera'), {
+    type: 'bar',
+    data: { labels: Object.keys(byCamera), datasets: [{ label: 'Alerts', data: Object.values(byCamera), backgroundColor: palette[4] }] },
+    options: { plugins: { legend: { display: false } } }
+  });
+
+  // Camera uptime-ish (current status snapshot)
+  const statusCounts = {ONLINE:0, SIMULATED:0, OFFLINE:0, ERROR:0};
+  summary.cameras.forEach(c => { statusCounts[c.status] = (statusCounts[c.status]||0)+1; });
+  new Chart(document.getElementById('chartUptime'), {
+    type: 'pie',
+    data: { labels: Object.keys(statusCounts), datasets: [{ data: Object.values(statusCounts),
+      backgroundColor: [palette[1], palette[2], '#33384a', palette[3]] } ] }
+  });
+
+  // Activity distribution across all cameras right now
+  const workersResp = await (await fetch('/api/workers')).json();
+  const activityCounts = {};
+  workersResp.forEach(w => { activityCounts[w.status] = (activityCounts[w.status]||0)+1; });
+  new Chart(document.getElementById('chartActivityDist'), {
+    type: 'polarArea',
+    data: { labels: Object.keys(activityCounts), datasets: [{ data: Object.values(activityCounts), backgroundColor: palette }] }
+  });
+}
+build();
+</script>
+{% endblock %}

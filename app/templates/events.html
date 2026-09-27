@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Event Log - NovaTech{% endblock %}
+{% block content %}
+<div class="card" style="margin-bottom:16px;">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+    <div class="form-row" style="margin-bottom:0;"><label>Camera</label>
+      <select id="fCamera"><option value="">All</option>
+        <option>CAM-001</option><option>CAM-002</option><option>CAM-003</option><option>CAM-004</option><option>CAM-005</option>
+      </select>
+    </div>
+    <div class="form-row" style="margin-bottom:0;"><label>Worker</label>
+      <input id="fWorker" placeholder="e.g. EMP-001">
+    </div>
+    <div class="form-row" style="margin-bottom:0;"><label>Event Type</label>
+      <select id="fType"><option value="">All</option>
+        <option value="ZONE_ENTER">ZONE_ENTER</option><option value="ZONE_EXIT">ZONE_EXIT</option>
+        <option value="ACTIVITY_CHANGE">ACTIVITY_CHANGE</option>
+      </select>
+    </div>
+    <button class="btn primary" onclick="load()">Filter</button>
+  </div>
+</div>
+<table class="data-table">
+  <thead><tr><th>Time</th><th>Camera</th><th>Worker</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody id="rows"><tr><td colspan="5" style="color:var(--text-dim)">Loading…</td></tr></tbody>
+</table>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const params = new URLSearchParams({limit: 200});
+  const cam = document.getElementById('fCamera').value; if (cam) params.append('camera_id', cam);
+  const worker = document.getElementById('fWorker').value; if (worker) params.append('worker_id', worker);
+  const type = document.getElementById('fType').value; if (type) params.append('event_type', type);
+  const r = await fetch('/api/events?' + params.toString());
+  const rows = await r.json();
+  document.getElementById('rows').innerHTML = rows.length ? rows.map(e => `
+    <tr><td>${new Date(e.timestamp).toLocaleString()}</td><td>${e.camera_id || '-'}</td>
+    <td>${e.worker_id || '-'}</td><td>${e.event_type}</td><td>${e.description}</td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--text-dim)">No events match this filter</td></tr>';
+}
+load();
+setInterval(load, 6000);
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NovaTech AI Operations Center{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="name">NovaTech Manufacturing</div>
+      <div class="sub">AI Operations Center</div>
+    </div>
+    <nav>
+      <a href="/" class="{{ 'active' if request.url.path == '/' }}">📊 Dashboard</a>
+      <a href="/workers" class="{{ 'active' if request.url.path == '/workers' }}">👷 Workers</a>
+      <a href="/alerts" class="{{ 'active' if request.url.path == '/alerts' }}">🚨 Alerts</a>
+      <a href="/events" class="{{ 'active' if request.url.path == '/events' }}">📜 Event Log</a>
+      <a href="/process-monitoring" class="{{ 'active' if request.url.path == '/process-monitoring' }}">⚙️ Process Monitoring</a>
+      <a href="/analytics" class="{{ 'active' if request.url.path == '/analytics' }}">📈 Analytics</a>
+      <a href="/settings" class="{{ 'active' if request.url.path == '/settings' }}">🛠️ Configuration</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="title">{{ plant_name }}</div>
+      <div class="status-pills">
+        {% if demo_mode %}<span class="pill">🧪 DEMO MODE</span>{% endif %}
+        <span class="pill" id="wsStatusPill"><span class="dot amber" id="wsDot"></span> connecting…</span>
+        {% if is_admin %}
+          <span class="pill">🔓 admin</span>
+        {% else %}
+          <a href="/login" class="pill">🔒 admin login</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+<script src="/static/js/ws_client.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

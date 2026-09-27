@@ -1,0 +1,89 @@
+2026-09-27 10:50:36 | INFO     | novatech | ======================================================================
+2026-09-27 10:50:36 | INFO     | novatech | Starting NovaTech Manufacturing Pvt. Ltd. - NovaTech Precision Components Plant - Unit 01
+2026-09-27 10:50:36 | INFO     | novatech | ======================================================================
+2026-09-27 10:50:36 | INFO     | novatech | Seeded 5 cameras
+2026-09-27 10:50:36 | INFO     | novatech | Seeded 8 demo workers
+2026-09-27 10:50:36 | INFO     | novatech | Seeded 17 zones
+2026-09-27 10:50:36 | INFO     | novatech | Seeded 5 processes
+2026-09-27 10:50:36 | INFO     | novatech | Seeded 7 rules
+2026-09-27 10:50:36 | INFO     | novatech | Started camera worker for CAM-001 (Assembly Line A)
+2026-09-27 10:50:36 | INFO     | novatech | Started camera worker for CAM-002 (Assembly Line B)
+2026-09-27 10:50:36 | INFO     | novatech | Started camera worker for CAM-003 (Quality Inspection)
+2026-09-27 10:50:36 | INFO     | novatech | Started camera worker for CAM-004 (Packaging)
+2026-09-27 10:50:36 | INFO     | novatech | Started camera worker for CAM-005 (Warehouse / Material Handling)
+2026-09-27 10:50:36 | INFO     | novatech | Dashboard ready at http://0.0.0.0:8000
+2026-09-27 10:50:37 | INFO     | novatech | Detection model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n.pt
+2026-09-27 10:50:37 | INFO     | novatech | Pose model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n-pose.pt
+2026-09-27 10:50:37 | INFO     | novatech | PPE model not configured - PPE detection will report MODEL_NOT_CONFIGURED
+2026-09-27 10:51:44 | INFO     | novatech | Shutting down - stopping all camera workers
+2026-09-27 10:51:45 | INFO     | novatech | Stopped camera worker for CAM-001
+2026-09-27 10:51:46 | INFO     | novatech | Stopped camera worker for CAM-002
+2026-09-27 10:51:47 | INFO     | novatech | Stopped camera worker for CAM-003
+2026-09-27 10:51:47 | INFO     | novatech | Stopped camera worker for CAM-004
+2026-09-27 10:51:47 | INFO     | novatech | Stopped camera worker for CAM-005
+2026-09-27 10:53:44 | INFO     | novatech | ======================================================================
+2026-09-27 10:53:44 | INFO     | novatech | Starting NovaTech Manufacturing Pvt. Ltd. - NovaTech Precision Components Plant - Unit 01
+2026-09-27 10:53:44 | INFO     | novatech | ======================================================================
+2026-09-27 10:53:44 | INFO     | novatech | Started camera worker for CAM-001 (Assembly Line A)
+2026-09-27 10:53:44 | INFO     | novatech | Started camera worker for CAM-002 (Assembly Line B)
+2026-09-27 10:53:44 | INFO     | novatech | Started camera worker for CAM-003 (Quality Inspection)
+2026-09-27 10:53:44 | INFO     | novatech | Detection model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n.pt
+2026-09-27 10:53:44 | INFO     | novatech | Pose model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n-pose.pt
+2026-09-27 10:53:44 | INFO     | novatech | PPE model not configured - PPE detection will report MODEL_NOT_CONFIGURED
+2026-09-27 10:53:44 | INFO     | novatech | Started camera worker for CAM-004 (Packaging)
+2026-09-27 10:53:44 | INFO     | novatech | Started camera worker for CAM-005 (Warehouse / Material Handling)
+2026-09-27 10:53:44 | INFO     | novatech | Dashboard ready at http://0.0.0.0:8000
+2026-09-27 10:56:50 | INFO     | novatech | ======================================================================
+2026-09-27 10:56:50 | INFO     | novatech | Starting NovaTech Manufacturing Pvt. Ltd. - NovaTech Precision Components Plant - Unit 01
+2026-09-27 10:56:50 | INFO     | novatech | ======================================================================
+2026-09-27 10:56:50 | INFO     | novatech | Started camera worker for CAM-001 (Assembly Line A)
+2026-09-27 10:56:50 | INFO     | novatech | Started camera worker for CAM-002 (Assembly Line B)
+2026-09-27 10:56:50 | INFO     | novatech | Started camera worker for CAM-003 (Quality Inspection)
+2026-09-27 10:56:50 | INFO     | novatech | Started camera worker for CAM-004 (Packaging)
+2026-09-27 10:56:50 | INFO     | novatech | Started camera worker for CAM-005 (Warehouse / Material Handling)
+2026-09-27 10:56:50 | INFO     | novatech | Dashboard ready at http://0.0.0.0:8000
+2026-09-27 10:56:50 | INFO     | novatech | Shutting down - stopping all camera workers
+2026-09-27 10:56:50 | INFO     | novatech | Detection model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n.pt
+2026-09-27 10:56:51 | INFO     | novatech | Pose model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n-pose.pt
+2026-09-27 10:56:51 | INFO     | novatech | PPE model not configured - PPE detection will report MODEL_NOT_CONFIGURED
+2026-09-27 10:56:53 | INFO     | novatech | Stopped camera worker for CAM-001
+2026-09-27 10:56:56 | INFO     | novatech | Stopped camera worker for CAM-002
+2026-09-27 10:56:58 | INFO     | novatech | Stopped camera worker for CAM-003
+2026-09-27 10:57:00 | INFO     | novatech | Stopped camera worker for CAM-004
+2026-09-27 10:57:02 | INFO     | novatech | Stopped camera worker for CAM-005
+2026-09-27 10:57:32 | INFO     | novatech | ======================================================================
+2026-09-27 10:57:32 | INFO     | novatech | Starting NovaTech Manufacturing Pvt. Ltd. - NovaTech Precision Components Plant - Unit 01
+2026-09-27 10:57:32 | INFO     | novatech | ======================================================================
+2026-09-27 10:57:32 | INFO     | novatech | Started camera worker for CAM-001 (Assembly Line A)
+2026-09-27 10:57:32 | INFO     | novatech | Started camera worker for CAM-002 (Assembly Line B)
+2026-09-27 10:57:32 | INFO     | novatech | Started camera worker for CAM-003 (Quality Inspection)
+2026-09-27 10:57:32 | INFO     | novatech | Started camera worker for CAM-004 (Packaging)
+2026-09-27 10:57:32 | INFO     | novatech | Started camera worker for CAM-005 (Warehouse / Material Handling)
+2026-09-27 10:57:32 | INFO     | novatech | Dashboard ready at http://0.0.0.0:8000
+2026-09-27 10:57:32 | INFO     | novatech | Shutting down - stopping all camera workers
+2026-09-27 10:57:32 | INFO     | novatech | Detection model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n.pt
+2026-09-27 10:57:33 | INFO     | novatech | Pose model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n-pose.pt
+2026-09-27 10:57:33 | INFO     | novatech | PPE model not configured - PPE detection will report MODEL_NOT_CONFIGURED
+2026-09-27 10:57:35 | INFO     | novatech | Stopped camera worker for CAM-001
+2026-09-27 10:57:37 | INFO     | novatech | Stopped camera worker for CAM-002
+2026-09-27 10:57:39 | INFO     | novatech | Stopped camera worker for CAM-003
+2026-09-27 10:57:41 | INFO     | novatech | Stopped camera worker for CAM-004
+2026-09-27 10:57:43 | INFO     | novatech | Stopped camera worker for CAM-005
+2026-09-27 11:00:10 | INFO     | novatech | ======================================================================
+2026-09-27 11:00:10 | INFO     | novatech | Starting NovaTech Manufacturing Pvt. Ltd. - NovaTech Precision Components Plant - Unit 01
+2026-09-27 11:00:10 | INFO     | novatech | ======================================================================
+2026-09-27 11:00:10 | INFO     | novatech | Started camera worker for CAM-001 (Assembly Line A)
+2026-09-27 11:00:10 | INFO     | novatech | Started camera worker for CAM-002 (Assembly Line B)
+2026-09-27 11:00:10 | INFO     | novatech | Started camera worker for CAM-003 (Quality Inspection)
+2026-09-27 11:00:10 | INFO     | novatech | Started camera worker for CAM-004 (Packaging)
+2026-09-27 11:00:10 | INFO     | novatech | Started camera worker for CAM-005 (Warehouse / Material Handling)
+2026-09-27 11:00:11 | INFO     | novatech | Dashboard ready at http://0.0.0.0:8000
+2026-09-27 11:00:11 | INFO     | novatech | Shutting down - stopping all camera workers
+2026-09-27 11:00:12 | INFO     | novatech | Detection model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n.pt
+2026-09-27 11:00:15 | INFO     | novatech | Pose model loaded: D:\Documents\manufacturing-ai-monitor\manufacturing-ai-monitor\models\yolov8n-pose.pt
+2026-09-27 11:00:15 | INFO     | novatech | PPE model not configured - PPE detection will report MODEL_NOT_CONFIGURED
+2026-09-27 11:00:15 | INFO     | novatech | Stopped camera worker for CAM-001
+2026-09-27 11:00:17 | INFO     | novatech | Stopped camera worker for CAM-002
+2026-09-27 11:00:19 | INFO     | novatech | Stopped camera worker for CAM-003
+2026-09-27 11:00:21 | INFO     | novatech | Stopped camera worker for CAM-004
+2026-09-27 11:00:24 | INFO     | novatech | Stopped camera worker for CAM-005

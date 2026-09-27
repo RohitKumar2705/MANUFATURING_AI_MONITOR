@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ worker_id }} - Worker Detail{% endblock %}
+{% block content %}
+<div class="grid-2">
+  <div class="card">
+    <div class="section-title" style="margin-top:0;">Worker Profile</div>
+    <div id="profile" style="font-size:13px; line-height: 1.9;">Loading…</div>
+  </div>
+  <div class="card">
+    <div class="section-title" style="margin-top:0;">Today's Activity Timeline</div>
+    <div id="timeline" style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;"></div>
+  </div>
+</div>
+
+<div class="section-title">Recent Alerts</div>
+<table class="data-table">
+  <thead><tr><th>Time</th><th>Type</th><th>Severity</th><th>Message</th></tr></thead>
+  <tbody id="alertRows"><tr><td colspan="4" style="color:var(--text-dim)">Loading…</td></tr></tbody>
+</table>
+{% endblock %}
+{% block scripts %}
+<script>
+const WORKER_ID = "{{ worker_id }}";
+async function load() {
+  const r = await fetch(`/api/workers/${WORKER_ID}`);
+  const d = await r.json();
+  document.getElementById('profile').innerHTML = `
+    <b>${d.name}</b> (${d.worker_id})<br>
+    Department: ${d.department}<br>
+    Shift: ${d.shift}<br>
+    Assigned Workstation: ${d.assigned_workstation}<br>
+    Current Status: <span class="badge-activity ${d.status}">${d.status}</span><br>
+    Current Camera: ${d.current_camera || '-'} &nbsp; Zone: ${d.current_zone || '-'}<br>
+    Last Seen: ${d.last_seen ? new Date(d.last_seen).toLocaleString() : 'never'}
+  `;
+
+  const tl = document.getElementById('timeline');
+  const events = (d.recent_events || []).filter(e => e.event_type === 'ACTIVITY_CHANGE' || e.event_type.startsWith('ZONE'));
+  tl.innerHTML = events.length ? events.map(e => `
+    <div>${new Date(e.timestamp).toLocaleTimeString()} &nbsp; ${e.description}</div>
+  `).join('') : '<div style="color:var(--text-dim)">No activity recorded yet</div>';
+
+  const alertRows = document.getElementById('alertRows');
+  const alerts = d.recent_alerts || [];
+  alertRows.innerHTML = alerts.length ? alerts.map(a => `
+    <tr><td>${new Date(a.timestamp).toLocaleTimeString()}</td><td>${a.type}</td>
+    <td><span class="sev ${a.severity}">${a.severity}</span></td><td>${a.message}</td></tr>
+  `).join('') : '<tr><td colspan="4" style="color:var(--text-dim)">No alerts for this worker</td></tr>';
+}
+load();
+setInterval(load, 4000);
+</script>
+{% endblock %}

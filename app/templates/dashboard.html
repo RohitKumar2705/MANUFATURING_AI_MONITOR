@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - NovaTech AI Operations Center{% endblock %}
+{% block content %}
+
+<div class="notice">
+  This prototype uses computer vision for operational monitoring. Detection and activity inference may be
+  inaccurate and should not be treated as a definitive measure of worker performance.
+</div>
+
+<div class="kpi-grid" id="kpiGrid">
+  <div class="kpi-card"><div class="label">Active Workers</div><div class="value accent" id="kpiActive">–</div></div>
+  <div class="kpi-card"><div class="label">Working</div><div class="value green" id="kpiWorking">–</div></div>
+  <div class="kpi-card"><div class="label">Potential Idle</div><div class="value amber" id="kpiIdle">–</div></div>
+  <div class="kpi-card"><div class="label">Active Alerts</div><div class="value red" id="kpiAlerts">–</div></div>
+  <div class="kpi-card"><div class="label">Cameras Online</div><div class="value" id="kpiCameras">–</div></div>
+  <div class="kpi-card"><div class="label">Process Compliance</div><div class="value accent" id="kpiCompliance">–</div></div>
+</div>
+
+<div class="section-title">Camera Grid</div>
+<div class="camera-grid">
+  {% for cam in cameras %}
+  <div class="camera-card" data-camera-id="{{ cam.camera_id }}">
+    <div class="video-wrap">
+      <img src="/api/cameras/{{ cam.camera_id }}/stream" alt="{{ cam.name }}">
+      <span class="badge status-badge OFFLINE" id="badge-{{ cam.camera_id }}">…</span>
+    </div>
+    <div class="cam-body">
+      <div class="cam-name">{{ cam.name }}</div>
+      <div class="cam-loc">{{ cam.camera_id }} · {{ cam.location }}</div>
+      <div class="cam-stats">
+        <div><span>Workers</span><b id="w-{{ cam.camera_id }}">0</b></div>
+        <div><span>Working</span><b id="working-{{ cam.camera_id }}">0</b></div>
+        <div><span>Idle</span><b id="idle-{{ cam.camera_id }}">0</b></div>
+        <div><span>Alerts</span><b id="alerts-{{ cam.camera_id }}">0</b></div>
+      </div>
+      <a class="view-link" href="/camera/{{ cam.camera_id }}">View Details →</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="section-title">Live Alert Feed</div>
+<div class="alert-feed" id="alertFeed">
+  <div class="alert-row"><span class="alert-msg" style="color:var(--text-dim)">Loading alerts…</span></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function refreshSummary() {
+  const r = await fetch('/api/dashboard/summary');
+  const d = await r.json();
+  document.getElementById('kpiActive').textContent = d.active_workers;
+  document.getElementById('kpiWorking').textContent = d.working;
+  document.getElementById('kpiIdle').textContent = d.potential_idle;
+  document.getElementById('kpiAlerts').textContent = d.active_alerts;
+  document.getElementById('kpiCameras').textContent = d.cameras_online + '/' + d.cameras_total;
+  document.getElementById('kpiCompliance').textContent = d.process_compliance_pct !== null ? d.process_compliance_pct + '%' : '—';
+
+  d.cameras.forEach(c => {
+    const badge = document.getElementById('badge-' + c.camera_id);
+    if (badge) { badge.textContent = c.status; badge.className = 'badge status-badge ' + c.status; }
+    const w = document.getElementById('w-' + c.camera_id); if (w) w.textContent = c.workers_detected;
+    const wk = document.getElementById('working-' + c.camera_id); if (wk) wk.textContent = c.working;
+    const idle = document.getElementById('idle-' + c.camera_id); if (idle) idle.textContent = c.idle;
+    const al = document.getElementById('alerts-' + c.camera_id); if (al) al.textContent = c.alerts;
+  });
+}
+
+async function refreshAlerts() {
+  const r = await fetch('/api/alerts?limit=15&status=OPEN');
+  const rows = await r.json();
+  const feed = document.getElementById('alertFeed');
+  if (!rows.length) { feed.innerHTML = '<div class="alert-row"><span class="alert-msg" style="color:var(--text-dim)">No active alerts</span></div>'; return; }
+  feed.innerHTML = rows.map(a => `
+    <div class="alert-row" onclick="location.href='/alerts'">
+      <span class="sev ${a.severity}">${a.severity}</span>
+      <span class="alert-msg">${a.type} — ${a.message} ${a.simulated ? '<span class="tag-sim">SIMULATED</span>' : ''}</span>
+      <span class="alert-meta">${a.camera_id || ''} ${new Date(a.timestamp).toLocaleTimeString()}</span>
+    </div>`).join('');
+}
+
+refreshSummary();
+refreshAlerts();
+setInterval(refreshSummary, 3000);
+setInterval(refreshAlerts, 5000);
+
+window.addEventListener('novatech:alert', refreshAlerts);
+window.addEventListener('novatech:worker_update', refreshSummary);
+</script>
+{% endblock %}

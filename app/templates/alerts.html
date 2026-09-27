@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Alerts - NovaTech{% endblock %}
+{% block content %}
+<div class="card" style="margin-bottom:16px;">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;">
+    <div class="form-row" style="margin-bottom:0;">
+      <label>Severity</label>
+      <select id="fSeverity"><option value="">All</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option><option>INFO</option></select>
+    </div>
+    <div class="form-row" style="margin-bottom:0;">
+      <label>Status</label>
+      <select id="fStatus"><option value="">All</option><option value="OPEN">Open</option><option value="ACKNOWLEDGED">Acknowledged</option></select>
+    </div>
+    <button class="btn primary" onclick="load()">Filter</button>
+  </div>
+</div>
+
+<table class="data-table">
+  <thead><tr><th>Time</th><th>Camera</th><th>Worker</th><th>Type</th><th>Severity</th><th>Message</th><th>Status</th><th></th></tr></thead>
+  <tbody id="rows"><tr><td colspan="8" style="color:var(--text-dim)">Loading…</td></tr></tbody>
+</table>
+{% endblock %}
+{% block scripts %}
+<script>
+async function load() {
+  const sev = document.getElementById('fSeverity').value;
+  const status = document.getElementById('fStatus').value;
+  const params = new URLSearchParams({limit: 150});
+  if (sev) params.append('severity', sev);
+  if (status) params.append('status', status);
+  const r = await fetch('/api/alerts?' + params.toString());
+  const rows = await r.json();
+  document.getElementById('rows').innerHTML = rows.length ? rows.map(a => `
+    <tr>
+      <td>${new Date(a.timestamp).toLocaleString()}</td>
+      <td>${a.camera_id || '-'}</td><td>${a.worker_id || '-'}</td><td>${a.type}</td>
+      <td><span class="sev ${a.severity}">${a.severity}</span></td>
+      <td>${a.message} ${a.simulated ? '<span class="tag-sim">SIMULATED</span>' : ''}</td>
+      <td>${a.status}</td>
+      <td>${a.status === 'OPEN' ? `<button class="btn" onclick="ack('${a.alert_id}')">Acknowledge</button>` : ''}</td>
+    </tr>`).join('') : '<tr><td colspan="8" style="color:var(--text-dim)">No alerts match this filter</td></tr>';
+}
+async function ack(id) {
+  await fetch(`/api/alerts/${id}/acknowledge`, {method:'POST'});
+  load();
+}
+load();
+setInterval(load, 5000);
+window.addEventListener('novatech:alert', load);
+</script>
+{% endblock %}
