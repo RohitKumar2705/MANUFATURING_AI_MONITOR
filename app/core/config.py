@@ -56,6 +56,13 @@ class Settings:
         return bool(self.get("app.demo_mode", True))
 
     @property
+    def vision_enabled(self) -> bool:
+        env = os.environ.get("VISION_ENABLED")
+        if env is not None:
+            return env.lower() in ("1", "true", "yes")
+        return bool(self.get("app.vision_enabled", True))
+
+    @property
     def detection_model_path(self) -> str:
         return str(BASE_DIR / self.get("models.detection", "models/yolov8n.pt"))
 

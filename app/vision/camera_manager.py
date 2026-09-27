@@ -77,9 +77,10 @@ class CameraWorker:
         self.stream.stop()
 
     def _loop(self):
-        det_engine = DetectionEngine.instance()
-        pose_engine = PoseEngine.instance()
-        ppe_detector = PPEDetector.instance()
+        vision_enabled = settings.vision_enabled
+        det_engine = DetectionEngine.instance() if vision_enabled else None
+        pose_engine = PoseEngine.instance() if vision_enabled else None
+        ppe_detector = PPEDetector.instance() if vision_enabled else None
         min_interval = 1.0 / max(settings.inference_fps, 0.1)
 
         while not self._stop_event.is_set():
@@ -93,7 +94,7 @@ class CameraWorker:
             run_inference = (now - self._last_inference_ts) >= min_interval
 
             workers_payload = []
-            if run_inference:
+            if run_inference and vision_enabled:
                 self._last_inference_ts = now
                 raw_detections = det_engine.predict_frame(frame, self.camera_id)
                 person_detections = [d for d in raw_detections if d.class_name == "person"]
@@ -170,6 +171,17 @@ class CameraWorker:
                     self.on_update(self.camera_id, {
                         "camera_id": self.camera_id,
                         "workers": workers_payload,
+                        "status": self.stream.status,
+                        "is_simulated": self.stream.is_simulated,
+                        "fps": round(self.stream.actual_fps, 1),
+                        "timestamp": datetime.utcnow().isoformat(),
+                    })
+            elif run_inference:
+                self._last_inference_ts = now
+                if self.on_update:
+                    self.on_update(self.camera_id, {
+                        "camera_id": self.camera_id,
+                        "workers": [],
                         "status": self.stream.status,
                         "is_simulated": self.stream.is_simulated,
                         "fps": round(self.stream.actual_fps, 1),
