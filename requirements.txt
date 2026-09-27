@@ -32,6 +32,8 @@ lap==0.5.13
 pytest==9.1.1
 httpx==0.28.1
 
+gunicorn
+
 # NOTE ON GPU/CPU TORCH:
 # `pip install -r requirements.txt` installs whatever torch build PyPI
 # resolves for your platform (CPU-only on most systems without extra flags).
