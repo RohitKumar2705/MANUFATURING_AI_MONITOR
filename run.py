@@ -19,7 +19,7 @@ if __name__ == "__main__":
                 f"The server is already running on http://localhost:{port}. "
                 "Close the existing run.py window or stop its process before starting another instance."
             )
-            
+            raise SystemExit(0)
 
     uvicorn.run(
         "app.main:app",
